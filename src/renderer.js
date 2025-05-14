@@ -1,0 +1,1 @@
+const typingInput = document.getElementById('typingInput');
