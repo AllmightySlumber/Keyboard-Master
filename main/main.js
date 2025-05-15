@@ -1,6 +1,7 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
+console.log('main process working');
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -24,4 +25,8 @@ app.on('activate', () => {
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
+});
+
+ipcMain.on('detect-spacing', (event, text) => {
+    console.log(text);
 });

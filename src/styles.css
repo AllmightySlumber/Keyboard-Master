@@ -13,3 +13,17 @@ body {
     transition: 0.2s;
     cursor: pointer;
 }
+
+#typingArea {
+    resize: none;
+    width: 300px;
+    height: 15px;
+    max-height: 35;
+    padding: 2%;
+}
+
+#restart {
+    padding: 0px 0px 0px 0px;
+    border: transparent;
+    font-size: large;
+}
