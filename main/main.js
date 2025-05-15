@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 console.log('main process working');
@@ -27,6 +27,23 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
 });
 
-ipcMain.on('detect-spacing', (event, text) => {
-    console.log(text);
-});
+// Importer du texte à partir d'un fichier txt
+ipcMain.handle('import-text', async () => {
+    try {
+        // Fenêtre d'importation (renvoie un object bool et une liste)
+        const { canceled, filePaths } = await dialog.showOpenDialog({
+            title: 'Importer un nouveau texte',
+            filters: [{ name: 'Fichiers texte', extensions: ['txt'] }],
+            properties: ['openFile']
+        });
+
+        if (canceled || filePaths ===0 ) return []; // Vérification sur le bool et la liste renvoyé
+
+        const importedText = fs.readFileSync(filePaths[0], 'utf-8');     // Récupération des données du fichier qu'on importe
+
+        return importedText;    // envoie à l'interface du text importer
+    } catch (error) {
+        console.log("Erreur lors de l'import :", error);
+        return [];
+    }
+}) ;
