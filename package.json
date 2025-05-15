@@ -3,33 +3,55 @@
   "version": "0.0.1",
   "description": "Application pour apprendre la dactylographie, ou simplement augementer sa vitesse de frappe sur clavier.",
   "main": "main/main.js",
-  
+
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
   },
-  
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AllmightySlumber/Keyboard-Master.git"
   },
-  
+
   "keywords": [
     "keyboard",
     "dactylographie",
     "clavier",
     "vitesse"
   ],
-  
+
   "author": "Boutou Frédéric",
   "license": "MIT",
-  
   "bugs": {
     "url": "https://github.com/AllmightySlumber/Keyboard-Master/issues"
   },
-  
+
   "homepage": "https://github.com/AllmightySlumber/Keyboard-Master#readme",
-  
   "devDependencies": {
-    "electron": "^36.2.0"
+    "electron": "^36.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  
+  "build": {
+    "appId": "com.keyboardmaster.app",
+    "productName": "Keyboard Master",
+    "files": [
+      "main/**/*",
+      "src/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   }
 }
