@@ -3,7 +3,8 @@ name: Build & Release
 on:
   push:
     tags:
-      - 'v*'  # déclenchement uniquement sur un tag style v1.0.0
+      - 'v*'  # Déclenche le build sur les tags v1.0.0 etc.
+  workflow_dispatch:  # Permet de lancer le build manuellement aussi
 
 jobs:
   build:
@@ -14,7 +15,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -23,14 +24,13 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci  
 
       - name: Build Electron app
-        run: npm run build
+        run: npx electron-builder --${{ matrix.os == 'ubuntu-latest' && 'linux' || matrix.os == 'macos-latest' && 'mac' || 'win' }}
 
-      - name: Upload build artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: keyboard-master-${{ runner.os }}
+          name: keyboard-master-${{ matrix.os }}
           path: dist/
-
