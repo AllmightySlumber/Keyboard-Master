@@ -6,7 +6,7 @@
 
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder --mac"
   },
 
   "repository": {
@@ -45,13 +45,17 @@
       "buildResources": "assets"
     },
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "icon": "assets/icon.icns",
+      "arch": ["arm64", "x64"]
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "assets/icon.ico"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "icon": "assets/icon.png"
     }
   }
 }
