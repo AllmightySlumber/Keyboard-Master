@@ -24,4 +24,5 @@ jobs:
       - name: Build app (Mac ARM)
         run: npm run build:mac
         env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
