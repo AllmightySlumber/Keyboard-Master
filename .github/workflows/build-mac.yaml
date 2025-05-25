@@ -21,8 +21,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build app (Mac ARM)
-        run: npm run build:mac
+      - name: Build for Mac ARM
+        run: npm run build:mac 
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
@@ -33,3 +33,52 @@ jobs:
           name: keyboard-master-mac-arm
           path: dist/
 
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with: 
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build for Windows
+        run: npx electron-builder --win
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: keyboard-master-windows
+          path: dist/
+  
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with: 
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build for Linux
+        run: npx electron-builder --linux
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: keyboard-master-linux
+          path: dist/
