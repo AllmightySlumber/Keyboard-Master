@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build for Mac ARM
-        run: npm run build:mac 
+        run: npm run build:mac --publish always
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
@@ -47,8 +47,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build for Windows
-        run: npx electron-builder --win
+      - name: Build & Publish for Windows
+        run: npx electron-builder --win --publish always
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       
@@ -73,7 +73,7 @@ jobs:
         run: npm install
 
       - name: Build for Linux
-        run: npx electron-builder --linux
+        run: npx electron-builder --linux --publish always
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       
