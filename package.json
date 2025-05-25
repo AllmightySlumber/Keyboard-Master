@@ -1,6 +1,6 @@
 {
   "name": "keyboard-master",
-  "version": "0.0.1",
+  "version": "0.0.12-beta",
   "description": "Application pour apprendre la dactylographie, ou simplement augementer sa vitesse de frappe sur clavier.",
   "main": "main/main.js",
 
