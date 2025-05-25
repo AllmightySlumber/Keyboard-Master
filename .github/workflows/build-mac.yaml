@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build for Mac ARM
-        run: npm electron-builder --mac --publish always
+        run: npx electron-builder --mac --publish always
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
