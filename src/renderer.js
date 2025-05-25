@@ -29,14 +29,6 @@ typingArea.addEventListener('input', () => {
 
     if (typedTextArray.length + wrongTypedText.length === 0) startChrono(); // Lance le chrono des la première saisie
 
-    // Coloration du texte taper selon si c'est correct ou non
-    if (!currentWord.startsWith(typingAreaText) && typingAreaText !=='') {
-        typingArea.style.color = 'red';
-    }
-    else if (currentWord.startsWith(typingAreaText)) {
-        typingArea.style.color = 'black';
-    }
-
     // Validation du mot si un espace ou un retour à la ligne ou une tabulation est détecter
     if (/\s$/.test(typingAreaText)) { // \s = n'importe quel caractère d'espacement (espace, retour à la ligne, tabulation)
         const wordTyped = typingAreaText.trim();  // Mot tapé sans espace
@@ -47,8 +39,19 @@ typingArea.addEventListener('input', () => {
             wrongTypedText.push(typingArea.value.trim());
         }
                 
-        typingArea.value = '';
+        typingArea.value = "";
         typingArea.placeholder = '';
+    }
+
+    // Coloration du texte taper selon si c'est correct ou non
+    if (typingArea.value ==="") {
+        typingArea.style.color = 'black';
+    }
+    else if (!currentWord.startsWith(typingAreaText)) {
+        typingArea.style.color = 'red';
+    }
+    else {
+        typingArea.style.color = 'black';
     }
 
     // Si on a recopier tout le texte
@@ -68,7 +71,7 @@ restartBtn.addEventListener('click', () =>{
     const column1 = document.getElementById('column1');
     const column2 = document.getElementById('column2');
 
-    typingArea.value = '';
+    typingArea.value = "";
     console.log('restart button');
     typedTextArray = [];
     wrongTypedText = [];
