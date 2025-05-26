@@ -7,13 +7,47 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button id="importer">Importer</button>
-    <p id="textToBeTyped"></p>
-    
-    <textarea name="TypingArea" id="typingArea" placeholder="Tape le texte ici…"></textarea>   
-    <!--<p>temps</p>-->
-    <time id="chrono">00:00</time>
-    <button id="restart">🔄</button>
+    <header>
+        <div class="menu-container">
+            <button class="menu-button" onclick="toggleDropdown()">☰</button>
+            <div class="dropdown-content" id="dropdown">
+                <div onclick="switchTab('accueil')">🏠 Accueil</div>
+                <div onclick="switchTab('cours')">📚 Cours</div>
+                <div onclick="switchTab('test')">📝 Test</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- -------------------------------------- Onglet Accueil -------------------------------------- -->
+    <div id="accueil" class="tab active">
+        <button id="importer">Importer</button>
+        <p id="textToBeTyped">Ce texte sert à tester certaines fonctionnalités de l'application Keyboard Master. Vous pouvez le changer en important un nouveau texte à partir d'un fichier au format .txt.</p>
+        
+        <textarea name="TypingArea" id="typingArea" placeholder="Tape le texte ici…"></textarea>   
+        <!--<p>temps</p>-->
+        <time id="chrono">00:00</time>
+        <button id="restart">🔄</button>
+
+        <!-- ------------------- Scoreboard ------------------- -->
+        <div id="Scoreboard">
+            <p id="score"> Le score sera affiché ici</p>
+            <div class="row">
+                <div id="column1" class="column">Mots correctements tapés :</div>
+                <div id="column2" class="column">Erreurs de frappe :</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- -------------------------------------- Onglet Cours -------------------------------------- -->
+    <div id="cours" class="tab">
+        Les cours seront ici.
+    </div>
+
+    <!-- -------------------------------------- Onglet Test -------------------------------------- -->
+    <div id="test" class="tab"> 
+        Les tests seront ici.
+    </div>
 
 
     <script src="renderer.js"></script>

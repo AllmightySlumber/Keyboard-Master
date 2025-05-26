@@ -1,3 +1,5 @@
+console.log('Render is working fine.');
+
 const body = document.getElementsByTagName('body');
 const textToBeTyped = document.getElementById('textToBeTyped');     
 const restartBtn = document.getElementById('restart');
@@ -17,9 +19,30 @@ let intervalId = null;
 let minutes;      // Utiliser après pour le calcul des scores
 let seconds;
 
-console.log('Render is working fine.');
 
 textToBeTyped.innerText = testText;     // Affichage tu texte de test dans la zone de recopie
+
+// ------------------------------------- Barre de Menu -------------------------------------
+function toggleDropdown() {
+    const dropdown = document.getElementById("dropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+}
+
+function switchTab(tabName) {
+    document.getElementById("dropdown").style.display = "none";
+
+    document.querySelectorAll(".tab").forEach( tab => {
+        tab.classList.remove("active");
+    })
+
+    document.getElementById(tabName).classList.add("active");
+}
+
+window.onclick = function(event) {
+    if (!event.target.closest('.menu-container')) {
+        document.getElementById("dropdown").style.display = "none";
+    }
+}
 
 typingArea.addEventListener('input', () => {
     const textArray = textToBeTyped.innerText.split(' '); //  Création d'un tableau du texte à recopier
@@ -82,6 +105,30 @@ restartBtn.addEventListener('click', () =>{
     column2.style.visibility = "hidden";
 });
 
+importBtn.addEventListener('click', async () => {
+    const newText = await window.electronAPI.importText();  // Chargement du texte à importer en
+    const cleanText = newText.replace(/\n/gm, " ");   // Suppression des saut de lignes et retour à la ligne
+    const score = document.getElementById('score');
+    const column1 = document.getElementById('column1');
+    const column2 = document.getElementById('column2');
+    
+    if (newText.length > 0) {
+        textToBeTyped.innerText = cleanText; // Affichage dans la zone de texte à recopier
+        typedTextArray = [];
+        wrongTypedText = [];
+    } else {
+        textToBeTyped.innerText = testText;
+        typedTextArray = [];
+        wrongTypedText = [];
+        alert("Importation échoué.")
+    }
+
+    score.style.visibility = "hidden";
+    column1.style.visibility = "hidden";
+    column2.style.visibility = "hidden";
+
+});
+
 // Lancer le chrono
 function startChrono() {
     if (intervalId !== null) return; // Évite de relancer le chrono
@@ -119,30 +166,6 @@ function stopChrono() {
     intervalId = null;
 };
 
-importBtn.addEventListener('click', async () => {
-    const newText = await window.electronAPI.importText();  // Chargement du texte à importer en
-    const cleanText = newText.replace(/\n/gm, " ");   // Suppression des saut de lignes et retour à la ligne
-    const score = document.getElementById('score');
-    const column1 = document.getElementById('column1');
-    const column2 = document.getElementById('column2');
-    
-    if (newText.length > 0) {
-        textToBeTyped.innerText = cleanText; // Affichage dans la zone de texte à recopier
-        typedTextArray = [];
-        wrongTypedText = [];
-    } else {
-        textToBeTyped.innerText = testText;
-        typedTextArray = [];
-        wrongTypedText = [];
-        alert("Importation échoué.")
-    }
-
-    score.style.visibility = "hidden";
-    column1.style.visibility = "hidden";
-    column2.style.visibility = "hidden";
-
-});
-
 function afficherScore() {
     const score = document.getElementById('score');
     
@@ -150,63 +173,23 @@ function afficherScore() {
     typedTextArray.forEach(word => {
         nbCaractere += word.length;     // Comptage du nombre de caractère totale tapé
     })
+   
+    score.innerText = "Nombre de mots correctement tapé : " + typedTextArray.length
+    + "\n" + "Nombre de mot moyen que ça représente : " + Math.round(nbCaractere / 5)
+    + "\n" + "Nombre de mot(s) mal tapé : " + wrongTypedText.length
+    + "\n" + "Vitesse de frappe en mot par minute (MPM) : "  + Math.round((nbCaractere / 5) * (60 / (minutes * 60 + seconds)))
+    + "\n" + "Temps moyen par mot : " + Math.round(((minutes * 60 + seconds) / (nbCaractere / 5)) * 1000) / 1000 + "s";
 
-    if (score === null) {
-        let p = document.createElement('p');    // Création d'un tag p pour afficher les statistiques du l'utilisateur
-        p.id = "score";
+    score.style.visibility = "visible";
+
+    // Modification de la première colonne
+    let column1 = document.getElementById('column1');
+    column1.innerText = "Mots correctement tapés :\n" + typedTextArray.join(', ');
+    column1.style.visibility = "visible";
+
+    // Modification de la deuxième colonne
+    let column2 = document.getElementById('column2');
+    column2.innerText = "Erreurs de frappes :\n" + wrongTypedText.join(', ');
+    column2.style.visibility = "visible";
     
-        p.innerText = "Nombre de mots correctement tapé : " + typedTextArray.length
-        + "\n" + "Nombre de mot moyen que ça représente : " + Math.round(nbCaractere / 5)
-        + "\n" + "Nombre de mot(s) mal tapé : " + wrongTypedText.length
-        + "\n" + "Vitesse de frappe en mot par minute (MPM) : "  + Math.round((nbCaractere / 5) * (60 / (minutes * 60 + seconds)))
-        + "\n" + "Temps moyen par mot : " + Math.round(((minutes * 60 + seconds) / (nbCaractere / 5)) * 1000) / 1000 + "s";
-        document.body.appendChild(p);
-
-        // Conteneur pour deux colonnes
-        let row = document.createElement('div');
-        row.className = "row";
-
-        let text = "Ici on va affichier les mots";
-
-        // Colonne 1
-        let column1 = document.createElement('div');
-        column1.className = "column";
-        column1.id = "column1";
-        p = document.createElement('p');
-        p.innerText = "Mots correctement tapés :\n" + typedTextArray.join(', ');
-        column1.appendChild(p);
-        row.appendChild(column1);
-
-        // Colonne 2
-        let column2 = document.createElement('div');
-        column2.className = "column";
-        column2.id = "column2";
-        p = document.createElement('p');
-        p.innerText = "Erreurs de frappes :\n" + wrongTypedText.join(', ');
-        column2.appendChild(p);
-        row.appendChild(column2);
-
-        document.body.appendChild(row);
-
-    } else {
-        score.innerText = "Nombre de mots correctement tapé : " + typedTextArray.length
-        + "\n" + "Nombre de mot moyen que ça représente : " + Math.round(nbCaractere / 5)
-        + "\n" + "Nombre de mot(s) mal tapé : " + wrongTypedText.length
-        + "\n" + "Vitesse de frappe en mot par minute (MPM) : "  + Math.round((nbCaractere / 5) * (60 / (minutes * 60 + seconds)))
-        + "\n" + "Temps moyen par mot : " + Math.round(((minutes * 60 + seconds) / (nbCaractere / 5)) * 1000) / 1000 + "s";
-
-        score.style.visibility = "visible";
-
-        // Modification de la première colonne
-        let column1 = document.getElementById('column1');
-        let p = column1.firstChild;
-        p.innerText = "Mots correctement tapés :\n" + typedTextArray.join(', ');
-        column1.style.visibility = "visible";
-
-        // Modification de la deuxième colonne
-        let column2 = document.getElementById('column2');
-        p = column2.firstChild;
-        p.innerText = "Erreurs de frappes :\n" + wrongTypedText.join(', ');
-        column2.style.visibility = "visible";
-    }
 }
